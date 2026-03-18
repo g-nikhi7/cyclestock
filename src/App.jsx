@@ -822,11 +822,14 @@ export default function App() {
         setAuthState("unauthenticated"); setUser(null); setUserProfile(null); return;
       }
       setUser(firebaseUser);
+      console.log("UID:", firebaseUser.uid);
       if (!firebaseUser.emailVerified) { setAuthState("unverified"); return; }
       try {
         const snap = await getDoc(doc(db, "users", firebaseUser.uid));
+        console.log("Document exists:", snap.exists());
+        console.log("Profile data:", snap.data());
         if (snap.exists()) setUserProfile(snap.data());
-      } catch (e) { console.error(e); }
+      } catch (e) { console.error("Firestore error:", e); }
       setAuthState("authenticated");
     });
     return unsub;
